@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+    <style>
+        /* Add your CSS styles here */
+        /* Style for search input, result container, and pagination */
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+</head>
+<body>
+    <h1>Movie Search Results</h1>
+    
+    <!-- Search Form -->
+    <div>
+        <input type="text" id="searchInput" placeholder="Search for a movie">
+        <button onclick="searchMovies()">Search</button>
+    </div>
+
+
+
+    <!-- Results Container -->
+    <div id="results">
+
+    </div>
+    <% if @movies.any? %>
+
+    <!-- Pagination -->
+    <div id="pagination">
+    # <%= will_paginate @movies %>
+    </div>
+    <% else %>
+  <p>No data available.</p>
+<% end %>
+
+    <script>
+        function searchMovies() {
+            const searchTerm = document.getElementById('searchInput').value;
+
+            // Make an AJAX request to the 'search' action in the 'Movies' controller
+            $.ajax({
+                url: '/movies/search',
+                method: 'GET',
+                data: { query: searchTerm }, // Send the search query as a parameter
+                success: function(data) {
+                    displayMovies(data); // Display the search results
+                },
+                error: function() {
+                    alert('Error fetching movie data.'); // Handle errors
+                }
+            });
+        }
+
+        function displayMovies(movies) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            // Loop through the search results (assuming 'movies' is an array of movie objects)
+            movies.forEach((movie) => {
+                const movieCard = document.createElement('div');
+                movieCard.classList.add('movie-card');
+
+                // Add movie details to the card
+                movieCard.innerHTML = `
+                    <h2>${movie.title}</h2>
+                    <p>${movie.overview}</p>
+                    <p>Release Date: ${movie.release_date}</p>
+                    <p>Popularity: ${movie.popularity}</p>
+                    <p>Vote Average: ${movie.vote_average}</p>
+                    <!-- Add more details as needed -->
+
+                    <img src="${movie.poster_path}" alt="${movie.title} Poster" />
+
+                    <hr />
+                `;
+
+                resultsContainer.appendChild(movieCard);
+            });
+        }
+    </script>
+</body>
+</html>

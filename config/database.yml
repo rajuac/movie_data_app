@@ -1,0 +1,19 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: password
+  #socket: /var/run/mysqld/mysqld.sock # Replace with your MySQL socket path if needed
+
+development:
+  <<: *default
+  database: movie_data_dev_db
+
+test:
+  <<: *default
+  database: your_database_name_test
+
+production:
+  <<: *default
+  database: your_database_name_production
